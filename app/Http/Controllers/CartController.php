@@ -1,0 +1,79 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\Martial;
+use Illuminate\Support\Facades\Session;
+
+class CartController extends Controller
+{
+    //
+    public function add(Martial $martial)
+    {
+        $cart = session()->get('cart', []);
+
+        if (!isset($cart[$martial->id])) {
+            $cart[$martial->id] = [
+                'title' => $martial->title,
+                'price' => $martial->price,
+            ];
+            session()->put('cart', $cart);
+        }
+
+        session()->put('cart', $cart);
+    
+        return redirect()->back()->with('success', 'Martial added to cart!');
+    }
+
+    public function checkout()
+    {
+        // Get the cart from the session
+        $cart = session()->get('cart', []);
+        
+        // Calculate the total price of the cart
+        $total = array_sum(array_column($cart, 'price'));
+        
+        // Get the authenticated user's balance
+        $userBalance = auth()->user()->balance;
+
+        // Check if the user has enough balance
+        if ($userBalance < $total) {
+            // Redirect to the payment page if the balance is not enough
+            session()->put('total', $total);
+            session()->put('userBalance', $userBalance);
+            return redirect()->route('payment.page')
+                ->with('error', 'Your balance is insufficient. Please add funds to proceed with the checkout.');
+        }
+
+        foreach ($cart as $id => $item) {
+            auth()->user()->paidMartials()->syncWithoutDetaching([$id]);
+        }  
+        
+        // Subtract balance
+        auth()->user()->balance -= $total;
+        auth()->user()->save();
+
+        // Clear cart
+        session()->forget('cart');
+
+        // Proceed with checkout if the balance is enough
+        return view('checkout', compact('cart', 'total'));
+    }
+
+    public function download($id)
+    {
+        $martial = Martial::findOrFail($id);
+        $path = public_path('storage/' . $martial->file_path);
+        // dd($path);
+
+        if (!file_exists($path)) {
+            abort(404, 'File not found.');
+        }
+
+        return response()->download($path);
+    }
+
+}
+
