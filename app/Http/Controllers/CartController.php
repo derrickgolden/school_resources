@@ -37,14 +37,15 @@ class CartController extends Controller
         
         // Get the authenticated user's balance
         $userBalance = auth()->user()->balance;
+        $phone = auth()->user()->phone;
 
         // Check if the user has enough balance
         if ($userBalance < $total) {
             // Redirect to the payment page if the balance is not enough
             session()->put('total', $total);
-            session()->put('userBalance', $userBalance);
-            return redirect()->route('payment.page')
-                ->with('error', 'Your balance is insufficient. Please add funds to proceed with the checkout.');
+            session()->put('userBalance', $userBalance);  
+            session()->put('phone', $phone);  
+            return redirect()->route('payment.page');
         }
 
         foreach ($cart as $id => $item) {
@@ -66,13 +67,13 @@ class CartController extends Controller
     {
         $martial = Martial::findOrFail($id);
         $path = public_path('storage/' . $martial->file_path);
-        // dd($path);
 
         if (!file_exists($path)) {
             abort(404, 'File not found.');
         }
+        $filename = $martial->title . '.pdf';
 
-        return response()->download($path);
+        return response()->download($path, $filename);
     }
 
 }

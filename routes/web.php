@@ -3,12 +3,15 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\CategoriesController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\MartialsController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\MpesaController;
+use App\Http\Controllers\PayheroPaymentController;
+
 
 // USERS
 // Route::get('/', function () {
@@ -26,8 +29,14 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // payment details
-Route::get('/payment', [PaymentController::class, 'index'])->name('payment.page');
-
+Route::middleware(['auth'])->group(function () {
+    Route::get('/payment', [PaymentController::class, 'index'])->name('payment.page');
+    Route::post('/mpesa/stkpush', [MpesaController::class, 'stkPush'])->name('mpesa.stkpush');
+    Route::post('/api/mpesa/callback', [MpesaController::class, 'stkCallback']);
+    Route::post('/stkpush', [PayheroPaymentController::class, 'stkPush'])->name('stk.push');
+    Route::post('/stk/callback', [PayheroPaymentController::class, 'stkCallback'])->name('stk.callback');
+    Route::get('/payment/check-status', [PaymentController::class, 'checkPaymentStatus'])->name('payment.checkStatus');
+});
 
 // ADMINS
 
