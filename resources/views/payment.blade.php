@@ -84,7 +84,6 @@
             const button = document.getElementById('mpesa-button');
             const loader = document.getElementById('loader');
             const text = document.getElementById('button-text');
-    console.log("Hellow")
             button.disabled = true;
             loader.classList.remove('hidden');
             text.textContent = 'Processing...';
