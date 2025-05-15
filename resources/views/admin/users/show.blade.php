@@ -18,9 +18,9 @@
         
             <h3 class="text-xl font-semibold mb-2">Materials Bought</h3>
         
-            @if($user->materials && $user->materials->count())
+            @if($user->paidMartials && $user->paidMartials->count())
                 <ul class="bg-white shadow rounded p-4 space-y-2">
-                    @foreach($user->materials as $material)
+                    @foreach($user->paidMartials as $material)
                         <li class="border-b pb-2">
                             <strong>{{ $material->title }}</strong> <br>
                             <span class="text-sm text-gray-600">Bought on {{ $material->pivot->created_at->format('F d, Y') }}</span>

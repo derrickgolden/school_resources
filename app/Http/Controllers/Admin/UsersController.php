@@ -18,6 +18,7 @@ class UsersController extends Controller
     // View user details
     public function show(User $user)
     {
+        $user->load('paidMartials');
         return view('admin.users.show', compact('user'));
     }
 
