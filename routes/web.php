@@ -20,6 +20,7 @@ Route::get('/public/categories/{category}/martials', [App\Http\Controllers\Marti
 
 // cart
 Route::post('/cart/add/{martial}', [CartController::class, 'add'])->name('cart.add');
+Route::delete('/cart/remove/{index}', [CartController::class, 'remove'])->name('cart.remove');
 Route::middleware(['auth'])->group(function () {
     Route::get('/martial/download/{id}', [CartController::class, 'download'])->name('martial.download');
     Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout.page');

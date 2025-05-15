@@ -27,6 +27,15 @@ class CartController extends Controller
         return redirect()->back()->with('success', 'Martial added to cart!');
     }
 
+    public function remove($index)
+{
+    $cart = session()->get('cart', []);
+    unset($cart[$index]);
+    session()->put('cart', $cart);
+    
+    return back()->with('success', 'Item removed from cart.');
+}
+
     public function checkout()
     {
         // Get the cart from the session
