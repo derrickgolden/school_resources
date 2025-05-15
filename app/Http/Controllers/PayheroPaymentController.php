@@ -34,7 +34,7 @@ class PayheroPaymentController extends Controller
 
         try {
             $response =  Http::withOptions([
-                'verify' => false, // <- ignore SSL verification
+                'verify' => true, // <- ignore SSL verification
             ])->withHeaders([
                 'Authorization' => $this->getBasicAuthToken(),
                 'Content-Type' => 'application/json',
@@ -44,7 +44,7 @@ class PayheroPaymentController extends Controller
                 'channel_id' => env('CHANNEL_ID'),
                 'provider' => 'm-pesa',
                 'external_reference' => 'INV-' . now()->timestamp,
-                'callback_url' => 'https://24cd-197-157-231-14.ngrok-free.app/api/stk/callback',
+                'callback_url' => 'https://easytech.africa/api/stk/callback',
             ]);
 
             if ($response->successful()) {
@@ -60,6 +60,7 @@ class PayheroPaymentController extends Controller
 
                 return redirect()->back()->with('success', 'USSD sent to your mobile phone. Enter PIN to continue.');
             } else {
+                Log::error('STK Push error: ' . $response);
                 return redirect()->back()->with('error', 'Failed to initiate STK push.');
             }
         } catch (\Exception $e) {

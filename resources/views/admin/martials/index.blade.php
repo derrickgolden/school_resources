@@ -5,7 +5,7 @@
                 Category Details
             </h2>
             <a href="{{ route('martials.create', $category->id) }}" class="text-blue-600 hover:underline text-sm">
-                <x-primary-button> Add Martial </x-primary-button>
+                <x-primary-button> Add Material </x-primary-button>
             </a> 
         </div>
     </x-slot>    
@@ -33,7 +33,7 @@
                     </a>
 
                     <form class="" action="{{ route('martials.destroy', $martial->id) }}" method="POST" 
-                        onsubmit="return confirm('Are you sure you want to delete the martial?')">
+                        onsubmit="return confirm('Are you sure you want to delete the material?')">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="text-red-600 hover:underline text-sm">

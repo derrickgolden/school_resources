@@ -4,6 +4,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Category;
 use App\Models\Grade;
 use App\Models\Martial;
@@ -33,14 +34,15 @@ class MartialsController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'file' => 'required|mimes:pdf|max:20480',
+            'file' => 'required|file|mimes:pdf|max:20480',
             'category_id' => 'required|exists:categories,id',
             'grade_id' => 'required|exists:grades,id',
             'term_no' => 'required',
             'price' => 'required|numeric|min:0',
         ]);
+        
         $filePath = $request->file('file')->store('martials', 'public');
-
+        
         Martial::create([
             'title' => $request->title,
             'file_path' => $filePath,
@@ -55,7 +57,12 @@ class MartialsController extends Controller
 
     public function destroy(Martial $martial)
     {
+        // Delete the file from storage
+    if ($martial->file_path && Storage::disk('public')->exists($martial->file_path)) {
+        Storage::disk('public')->delete($martial->file_path);
+    }
+
         $martial->delete();
-        return back()->with('success', 'Martial deleted.');
+        return back()->with('success', 'Material deleted.');
     }
 }

@@ -14,11 +14,8 @@ use App\Http\Controllers\PayheroPaymentController;
 
 
 // USERS
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-Route::get('/', [DashboardController::class, 'index'])
-    ->name('dashboard');
+Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/public/categories/{category}/martials', [App\Http\Controllers\MartialsController::class, 'index'])->name('public.martials.index');
 
 // cart
@@ -64,11 +61,6 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::post('/martials', [MartialsController::class, 'store'])->name('martials.store');
     Route::delete('/martials/{martial}', [MartialsController::class, 'destroy'])->name('martials.destroy');
 });
-
-// 👤 User Dashboard (verified)
-Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
 
 // 👤 Profile Routes
 Route::middleware('auth')->group(function () {

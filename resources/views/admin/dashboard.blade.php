@@ -20,7 +20,7 @@
                 </div>
         
                 <div class="bg-white p-6 rounded shadow text-center">
-                    <div class="text-gray-500 text-sm">Total Martials</div>
+                    <div class="text-gray-500 text-sm">Total Materials</div>
                     <div class="text-2xl font-bold">{{ $totalMartials }}</div>
                 </div>
         
